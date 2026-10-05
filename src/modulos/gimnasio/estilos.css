@@ -1,0 +1,169 @@
+/* ------------------------------ Schulte ------------------------------- */
+
+.schulte {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 324px;
+  gap: var(--s5);
+  align-items: start;
+}
+
+.schulte__columna {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s4);
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .schulte {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.schulte-rejilla {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--s2);
+}
+
+.schulte-celda {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-m);
+  background: var(--bg-inset);
+  color: var(--texto);
+  font-size: clamp(1rem, 2.6vw, 1.5rem);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  transition: background var(--dur), color var(--dur), border-color var(--dur),
+    opacity var(--dur), transform var(--dur);
+}
+
+.schulte-celda:not(:disabled):hover {
+  border-color: var(--acento);
+  background: var(--acento-sutil);
+  transform: translateY(-1px);
+}
+
+.schulte-celda--vacia {
+  background: transparent;
+  border-style: dashed;
+  border-color: transparent;
+  pointer-events: none;
+}
+
+.schulte-celda--hecha {
+  color: var(--exito);
+  background: var(--exito-sutil);
+  border-color: transparent;
+  opacity: 0.75;
+}
+
+.schulte-celda--centro {
+  border-color: var(--borde-fuerte);
+}
+
+.schulte-celda--fallo {
+  animation: parpadeo-error 300ms ease;
+  border-color: var(--peligro);
+  color: var(--peligro);
+}
+
+.schulte-punto {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--acento);
+  box-shadow: 0 0 0 4px var(--acento-sutil);
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.schulte-estado {
+  margin-top: var(--s4);
+  min-height: 1.4em;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.schulte-estado strong {
+  color: var(--acento-fuerte);
+}
+
+.schulte-ok {
+  color: var(--exito);
+  font-weight: 650;
+}
+
+.schulte-acciones {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--s3);
+}
+
+.pasos {
+  margin: 0;
+  padding-left: 1.15em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  color: var(--texto-suave);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.pasos li::marker {
+  color: var(--acento-fuerte);
+  font-weight: 700;
+}
+
+/* ------------------------------ Sangría ------------------------------- */
+
+.sangria-texto {
+  max-width: 92ch;
+  margin: 0 auto;
+  padding: var(--s5) var(--s4);
+  background: var(--bg-inset);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-m);
+  overflow-x: auto;
+}
+
+.linea {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 0.42em;
+  font-size: clamp(0.82rem, 1.35vw, 1.08rem);
+  line-height: 2.35;
+  white-space: nowrap;
+}
+
+.linea__centro {
+  color: var(--texto);
+  font-weight: 520;
+}
+
+.linea__borde {
+  color: var(--texto);
+  font-weight: 520;
+  opacity: 0.3;
+  transition: opacity var(--dur);
+}
+
+.sangria-texto[data-fase='leyendo'] .linea__borde {
+  opacity: 0.24;
+}
+
+.sangria-vacio {
+  color: var(--texto-tenue);
+  text-align: center;
+  font-size: 0.9rem;
+}

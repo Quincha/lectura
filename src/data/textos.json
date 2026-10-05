@@ -1,0 +1,127 @@
+{
+  "textos": [
+    {
+      "id": "hexagonal",
+      "titulo": "Arquitectura hexagonal: puertos y adaptadores",
+      "etiqueta": "Arquitectura de software",
+      "texto": "La arquitectura hexagonal, también conocida como puertos y adaptadores, fue formulada por Alistair Cockborn para resolver un problema recurrente: los dominios de negocio terminan acoplados a los detalles técnicos que los rodean. En un proyecto típico, la lógica de las reglas de negocio importa clases de un ORM, construye respuestas HTTP directamente y consulta un marco de trabajo concreto. El resultado es que cambiar la base de datos o exponer la funcionalidad por un canal distinto al web se convierte en una reescritura costosa. La propuesta separa el núcleo de la aplicación de sus bordes. En el centro reside el dominio: entidades, casos de uso y políticas que no dependen de nada externo. Alrededor se definen puertos, que son contratos de entrada y de salida expresados como interfaces. Los puertos de entrada describen qué puede pedir el mundo exterior al núcleo, por ejemplo un caso de uso llamado RegistrarLectura. Los puertos de salida describen lo que el núcleo necesita del mundo, como un repositorio de métricas o un servicio de notificación. Los adaptadores son las implementaciones concretas de esos contratos. Un adaptador de entrada puede ser un controlador web, una línea de comandos o una prueba de integración. Un adaptador de salida puede ser SQLite, un cliente HTTP o un archivo de texto. El núcleo solo conoce la interfaz, de modo que la infraestructura puede sustituirse sin tocar las reglas de negocio. Esta inversión de dependencias tiene consecuencias prácticas inmediatas. Las pruebas del dominio se ejecutan en memoria y en milisegundos, sin levantar servidores ni contenedores. El mismo caso de uso puede servir a una interfaz gráfica local y a una API remota sin duplicar lógica. Además, el equipo puede aplazar decisiones técnicas sin miedo, porque la elección de un adaptador deja de ser irreversible. Conviene señalar también los riesgos. Una mala abstracción produce tantos archivos como una mala implementación directa, y el exceso de interfaces intermedias dificulta el rastreo del código. La arquitectura hexagonal no elimina la complejidad: la concentra en los bordes y obliga a nombrar con precisión qué entra y qué sale. Funciona mejor cuando el dominio realmente aporta valor y cambia con frecuencia. En aplicaciones cortas y estables, su coste puede superar a su beneficio. La regla práctica es acotar primero el núcleo y añadir puertos únicamente allí donde exista una razón concreta para sustituir una implementación por otra.",
+      "preguntas": [
+        {
+          "id": "hex-1",
+          "enunciado": "Según el texto, ¿cuál es el objetivo principal de separar el núcleo de los bordes?",
+          "opciones": [
+            "Reducir el número total de archivos del proyecto",
+            "Evitar que la lógica de negocio dependa de detalles técnicos concretos",
+            "Eliminar por completo la necesidad de escribir pruebas",
+            "Permitir que la base de datos defina las reglas de negocio"
+          ],
+          "correcta": 1
+        },
+        {
+          "id": "hex-2",
+          "enunciado": "En esta arquitectura, los adaptadores corresponden a:",
+          "opciones": [
+            "Las interfaces que el núcleo expone al exterior",
+            "Las reglas de negocio puras del dominio",
+            "Las implementaciones concretas de los contratos definidos por los puertos",
+            "Los casos de uso que reciben peticiones"
+          ],
+          "correcta": 2
+        },
+        {
+          "id": "hex-3",
+          "enunciado": "¿Qué riesgo destaca el texto sobre esta arquitectura?",
+          "opciones": [
+            "Impide usar bases de datos relacionales",
+            "Ralentiza de forma inevitable las pruebas del dominio",
+            "Una mala abstracción puede multiplicar los archivos y dificultar el rastreo del código",
+            "Obliga a reescribir el núcleo cada vez que cambia la interfaz web"
+          ],
+          "correcta": 2
+        }
+      ]
+    },
+    {
+      "id": "sqlite",
+      "titulo": "SQLite como almacén local de métricas",
+      "etiqueta": "Bases de datos",
+      "texto": "SQLite es un motor de base de datos relacional embebido que se ejecuta dentro del proceso de la aplicación, sin servidor independiente ni configuración de red. Toda la base de datos reside en un único archivo del sistema de ficheros, lo que la convierte en una opción habitual para aplicaciones de escritorio, móviles y dispositivos con recursos limitados. Su modelo de concurrencia merece atención: las escrituras se serializan mediante un bloqueo a nivel de fichero, de modo que una sola transacción puede escribir a la vez, mientras que las lecturas son simultáneas y no bloquean. En aplicaciones con una única ventana y tráfico bajo, este diseño es más que suficiente y evita el coste de administrar un servicio aparte. SQLite emplea transacciones ACID, aunque con un matiz importante: la durabilidad depende de la política de sincronización del sistema de ficheros. Con la configuración por defecto, los datos se consideran seguros tras confirmar la transacción, pero un corte de energía abrupto puede perder las últimas escrituras si se relaja ese nivel. Para métricas de progreso no es crítico, pero conviene conocerlo. El rendimiento se apoya en índices y en un plan de consultas optimizado; una tabla pequeña se recorre entera sin coste apreciable, y añadir un índice sobre la fecha permite responder a una consulta de los últimos treinta días sin escanear toda la tabla. Conviene normalizar lo justo: separar la sesión del ejercicio de sus respuestas individuales evita duplicar información y permite calcular tasas de acierto por pregunta. El transporte de los datos hacia la interfaz es otra decisión relevante. Cuando la aplicación se ejecuta en un entorno aislado, la capa de datos puede usar una biblioteca que interprete el formato nativo directamente. Cuando se empaqueta como aplicación de escritorio con un núcleo nativo, tiene sentido usar el mismo archivo a través de las primitivas del sistema. En ambos casos el esquema debe ser único, con un archivo de migraciones versionado que se aplique al arrancar, de forma que una versión antigua de la aplicación nunca encuentre una tabla que no comprende. Finalmente, el ciclo de vida del archivo local plantea decisiones de higiene. Un botón de reinicio debe borrar las tablas dentro de una transacción y volver a ejecutar las migraciones de creación. Las copias de seguridad se resuelven copiando el fichero mientras no hay escrituras en curso. Y porque el archivo es portátil, conviene ofrecer al usuario una forma de exportarlo: su historial de progreso le pertenece.",
+      "preguntas": [
+        {
+          "id": "sqt-1",
+          "enunciado": "¿Cuál es la característica que define a SQLite frente a otros motores relacionales?",
+          "opciones": [
+            "Requiere un servidor propio que escuche en un puerto de red",
+            "Se ejecuta embebido en el proceso y almacena todo en un único archivo",
+            "No soporta transacciones ACID",
+            "Solo permite una lectura simultánea"
+          ],
+          "correcta": 1
+        },
+        {
+          "id": "sqt-2",
+          "enunciado": "Sobre la concurrencia, el texto indica que:",
+          "opciones": [
+            "Las escrituras se serializan y las lecturas no se bloquean entre sí",
+            "Todas las operaciones se bloquean mutuamente",
+            "No existe bloqueo alguno a nivel de fichero",
+            "Las lecturas esperan a que termine la escritura en curso"
+          ],
+          "correcta": 0
+        },
+        {
+          "id": "sqt-3",
+          "enunciado": "¿Qué se recomienda para evitar duplicar información entre sesión y respuestas?",
+          "opciones": [
+            "Guardar todo en una única tabla amplia",
+            "Normalizar separando la sesión de sus respuestas en tablas distintas",
+            "Guardar el historial en formato JSON dentro de una sola celda",
+            "Eliminar los índices para ganar velocidad de escritura"
+          ],
+          "correcta": 1
+        }
+      ]
+    },
+    {
+      "id": "estado-frontend",
+      "titulo": "El coste oculto del estado global en el frontend",
+      "etiqueta": "Desarrollo frontend",
+      "texto": "Durante años, la respuesta habitual a cualquier problema de sincronización en una interfaz fue añadir un contenedor de estado global. La promesa era seductora: una única fuente de verdad accesible desde cualquier componente, sin prop drilling ni eventos manuales. En la práctica, ese estado compartido tiende a crecer sin límite y a convertirse en el punto donde el rendimiento y la mantenibilidad se degradan. El primer coste es de re-renderizado. Cuando un valor compartido cambia, todos los componentes suscritos se actualizan, incluso si la porción de datos que usan no se ha movido. La solución habitual es segmentar el estado, memorizar selectores y envolver las derivaciones en comparaciones profundas, lo cual funciona pero traslada la complejidad al código de lectura. Un desarrollador nuevo debe entender no solo qué datos existen, sino también qué combinaciones provocan qué repintados. El segundo coste es de acoplamiento. El estado global deja de ser una caché y pasa a ser un contrato implícito: si dos módulos leen la misma clave, ninguna modificación es local. El campo de visión del cambio se ensancha y las pruebas empiezan a necesitar un proveedor completo para renderizar un botón. El tercer coste es de semántica. No todo el estado merece el mismo tratamiento. Conviene distinguir entre estado de servidor, estado de URL, estado de formulario y estado efímero de interfaz. Cada uno tiene un ciclo de vida distinto, una estrategia de persistencia distinta y un mecanismo de invalidación distinto. Meterlos todos en un almacén único obliga a escribir a mano reglas que el enrutador o el propio servidor ya resuelven de forma natural. El resultado es código duplicado y reglas de actualización difíciles de razonar. Hay alternativas razonables. El estado remoto puede delegarse en una caché por peticiones, que se encarga de revalidación, reintentos y desactualización. El estado de pertenencia de la interfaz puede vivir en la URL, que además comparte y refresca sin esfuerzo. El estado local de un árbol de componentes puede quedarse en el propio componente o descender a un contexto pequeño y específico. La regla que funciona en la práctica es ascender el estado únicamente cuando otro componente realmente lo necesita, y mantenerlo lo más cerca posible de quien lo consume. El estado global no es un error: es una herramienta con un coste fijo de mantenimiento. La pregunta útil no es si conviene, sino cuántos módulos dependen realmente de ese dato y si esa dependencia es estable o casual.",
+      "preguntas": [
+        {
+          "id": "est-1",
+          "enunciado": "¿Cuál es el primer coste del estado global que señala el texto?",
+          "opciones": [
+            "Imposibilidad de persistir datos entre sesiones",
+            "Re-renderizados de componentes que consumen porciones de datos que no cambiaron",
+            "La necesidad de abandonar el uso de TypeScript",
+            "Que el estado deja de poder dividirse en partes"
+          ],
+          "correcta": 1
+        },
+        {
+          "id": "est-2",
+          "enunciado": "El texto distingue varios tipos de estado. ¿Cuál de estos NO aparece entre ellos?",
+          "opciones": [
+            "Estado de servidor",
+            "Estado de URL",
+            "Estado de formulario",
+            "Estado compilado en tiempo de construcción"
+          ],
+          "correcta": 3
+        },
+        {
+          "id": "est-3",
+          "enunciado": "¿Qué criterio propone el autor para decidir si un dato sube al estado global?",
+          "opciones": [
+            "Que sea un número y no una cadena de texto",
+            "Que muchos módulos dependan de él y que esa dependencia sea estable, no casual",
+            "Que se use en más de dos componentes, aunque sea temporal",
+            "Que proceda de una petición de red"
+          ],
+          "correcta": 1
+        }
+      ]
+    }
+  ]
+}

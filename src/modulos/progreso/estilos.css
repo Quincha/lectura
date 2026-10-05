@@ -1,0 +1,52 @@
+.grafica {
+  width: 100%;
+  min-height: 200px;
+}
+
+.mapa {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.mapa__celda {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  background: var(--bg-inset);
+  border: 1px solid var(--borde);
+}
+
+.mapa__celda.nivel-1 {
+  background: color-mix(in srgb, var(--acento) 30%, var(--bg-inset));
+  border-color: transparent;
+}
+
+.mapa__celda.nivel-2 {
+  background: color-mix(in srgb, var(--acento) 62%, var(--bg-inset));
+  border-color: transparent;
+}
+
+.mapa__celda.nivel-3 {
+  background: var(--acento);
+  border-color: transparent;
+}
+
+.mapa__leyenda {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: var(--s3);
+  font-size: 0.72rem;
+  color: var(--texto-tenue);
+  justify-content: flex-end;
+}
+
+.mapa__leyenda .mapa__celda {
+  width: 13px;
+  height: 13px;
+  aspect-ratio: auto;
+}
+
+.tabla-envoltorio {
+  overflow-x: auto;
+}

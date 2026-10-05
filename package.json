@@ -1,0 +1,40 @@
+{
+  "name": "lectura-rapida",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Plataforma local de entrenamiento de lectura rápida (RSVP, tests de comprensión y gimnasio visual).",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "icono": "node scripts/generar-icono.mjs && tauri icon icono-fuente.png",
+    "test:e2e": "npm run build && node tests/smoke.mjs",
+    "tauri": "tauri",
+    "tauri:dev": "scripts\\tauri-msvc.cmd dev",
+    "tauri:build": "scripts\\tauri-msvc.cmd build"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@tauri-apps/api": "^2.12.1",
+    "@tauri-apps/plugin-sql": "^2.5.0",
+    "lucide-react": "^1.52.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-is": "^19.3.0",
+    "react-router-dom": "^7.18.4",
+    "recharts": "^3.10.1",
+    "sql.js": "^1.14.2"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/sql.js": "^1.4.9",
+    "@vitejs/plugin-react": "^6.1.1",
+    "playwright": "^1.63.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.2"
+  }
+}
